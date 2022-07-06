@@ -1,0 +1,9 @@
+face_recognition
+cv2
+datetime
+numpy
+
+For Face Recognition Installation:
+visual studio c++
+dlib
+cmake
