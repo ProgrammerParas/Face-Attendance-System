@@ -1,11 +1,27 @@
+import time
 import cv2
 import numpy as np
 import face_recognition
 import os
 from datetime import datetime
+import random
+import pyttsx3
+
+engine = pyttsx3.init('sapi5')
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[0].id)
 
 
-path = 'C:\\Users\\paras\\OneDrive\\Documents\\VS CODE\\Face Attendance2\\images'
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
+
+unknown_face_string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+unknown_face_letter = random.choice(unknown_face_string)
+
+
+path = 'C:\\Users\\paras\\OneDrive\\Documents\\VS CODE\\Face Attendance\\images'
+unknown_face_file_path = 'C:\\Users\\paras\\OneDrive\\Documents\\VS CODE\\Face Attendance'
 images = []
 personNames = []
 myList = os.listdir(path)
@@ -28,6 +44,9 @@ def faceEncodings(images):
 
 now = datetime.now() #getting current datetime
 current_time = now.strftime("%Y-%m-%d")
+
+unknown_face_timings = datetime.now()
+unknown_face_file_time = unknown_face_timings.strftime('%H-%M-%S')
 
 
 def attendance(name):
@@ -72,6 +91,34 @@ while True:
             cv2.rectangle(frame, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
             cv2.putText(frame, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2) #Recognition rectangle
             attendance(name)
+            speak_name = f'{name} Present'
+            speak(speak_name)
+
+        if matches[matchIndex]:
+            name = personNames[matchIndex].upper()
+            #print(name)
+            y1,x2,y2,x1 = faceLoc
+            y1, x2, y2, x1 = y1*4,x2*4,y2*4,x1*4
+            cv2.rectangle(frame,(x1,y1),(x2,y2),(0,255,0),2)
+            cv2.rectangle(frame,(x1,y2-35),(x2,y2),(0,255,0),cv2.FILLED)
+            cv2.putText(frame,name,(x1+6,y2-6),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
+            attendance(name)
+
+
+        if faceDis[matchIndex]< 0.50:
+            name = personNames[matchIndex].upper()
+            attendance(name)
+        else:
+            name = 'Unknown'
+            #unknown_face_file = f'Unknown{unknown_face_letter}.png'
+            cv2.imwrite('Unknown.png', frame)
+            speak('Unknown Face Detected')
+            #print(name)
+            y1,x2,y2,x1 = faceLoc
+            y1, x2, y2, x1 = y1*4,x2*4,y2*4,x1*4
+            cv2.rectangle(frame,(x1,y1),(x2,y2),(0, 0, 255),2)
+            cv2.rectangle(frame,(x1,y2-35),(x2,y2),(0, 0, 255),cv2.FILLED)
+            cv2.putText(frame,name,(x1+6,y2-6),cv2.FONT_HERSHEY_COMPLEX,1,(255,255,255),2)
 
     cv2.imshow('Webcam', frame)
     if cv2.waitKey(1) == 13:
