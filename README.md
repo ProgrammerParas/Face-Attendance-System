@@ -12,6 +12,16 @@ This program recognises given student faces and mark their attendance with date 
 ![Attendance Capture](https://user-images.githubusercontent.com/69015017/177675889-f829c859-8b7b-4317-a526-247a685815b7.PNG)
 
 
+# Avoid Overwriting Pervious Attendance
+
+Solution 1:
+Ask The Admin In Which CSV File He Wants To Register Attendance
+![Attendance Input](https://user-images.githubusercontent.com/69015017/177679091-cc1d2200-ba9d-44a2-a194-24a2555f8e64.PNG)
+
+Solution 2:
+Automate The Program And Set The Attendance File Name According To Current Date And Time So That Program Will Generate New File Everytime For New Attendance.
+
+
 # Tools And Libraries
 
 1. opencv-python - https://opencv.org/
